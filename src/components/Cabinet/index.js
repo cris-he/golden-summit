@@ -9,12 +9,33 @@ const { Option } = Select;
 
 const columns = [
   {
-    title: "Width",
+    title: "Specs",
+    key: "specs",
+    dataIndex: "specs",
+    render: (tags) => (
+      <>
+        {tags.map((tag) => {
+          return (
+            <Tag color="geekblue" key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </>
+    ),
+  },
+  {
+    title: "Program Path",
+    dataIndex: "programPath",
+    key: "programPath",
+  },
+  {
+    title: "LPX",
     dataIndex: "width",
     key: "width",
   },
   {
-    title: "Height",
+    title: "LPY",
     dataIndex: "height",
     key: "height",
   },
@@ -24,24 +45,24 @@ const columns = [
     key: "quantity",
   },
   {
-    title: "Specs",
-    key: "specs",
-    dataIndex: "specs",
-    render: (tags) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "PVC") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    title: "Rotation",
+    dataIndex: "rotation",
+    key: "rotation",
+  },
+  {
+    title: "Program variables",
+    dataIndex: "programVariables",
+    key: "programVariables",
+  },
+  {
+    title: "Grain",
+    dataIndex: "grain",
+    key: "grain",
+  },
+  {
+    title: "Offset",
+    dataIndex: "offset",
+    key: "offset",
   },
   {
     title: "Action",
@@ -50,12 +71,13 @@ const columns = [
   },
 ];
 
-const data = [
+const mockData = [
   {
     key: "1",
     width: "1",
     height: "1",
     quantity: "1",
+    programPath: "D:\\\\asdf-asdf-adf.bpp",
     specs: ["PVC", "GLASS"],
   },
   {
@@ -63,6 +85,7 @@ const data = [
     width: "1",
     height: "1",
     quantity: "1",
+    programPath: "D:\\\\asdf-asdf-adf.bpp",
     specs: ["喷油", "GLASS"],
   },
   {
@@ -70,6 +93,7 @@ const data = [
     width: "1",
     height: "1",
     quantity: "1",
+    programPath: "D:\\\\asdf-asdf-adf.bpp",
     specs: ["PVC", "SHAKER", "GLASS"],
   },
 ];
@@ -77,6 +101,8 @@ const data = [
 export default () => {
   const [expand, setExpand] = useState(false);
   const [form] = Form.useForm();
+
+  const [data, setData] = useState(mockData);
 
   const getFields = () => {
     const count = expand ? 10 : 6;
@@ -112,7 +138,17 @@ export default () => {
   };
 
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    const { type, door, glass, width, height, quantity } = values;
+    data.push({
+      key: data.length + 1,
+      programPath:'D:\\asdf-asdf-adf.bpp',
+      width,
+      height,
+      quantity,
+      specs: [type, door, glass],
+    });
+    setData([...data]);
+    // console.log("Received values of form: ", data);
   };
 
   return (
@@ -127,41 +163,89 @@ export default () => {
         {/* <Row gutter={24}>{getFields()}</Row> */}
         <Row gutter={24}>
           <Col span={8}>
-            <Form.Item name={`Type`} label={`Type`}>
-              <Select defaultValue="2">
-                <Option value="1">PVC</Option>
-                <Option value="2">喷油</Option>
+            <Form.Item
+              name={`type`}
+              label={`Type`}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Select>
+                <Option value="PVC">PVC</Option>
+                <Option value="喷油">喷油</Option>
               </Select>
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name={`Door`} label={`Door`}>
-              <Select defaultValue="2">
-                <Option value="1">SHAKER</Option>
-                <Option value="2">1/8 DOOR</Option>
+            <Form.Item
+              name={`door`}
+              label={`Door`}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Select>
+                <Option value="SHAKER">SHAKER</Option>
+                <Option value="1/8 DOOR">1/8 DOOR</Option>
               </Select>
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name={`Glass`} label={`Glass`}>
-              <Select defaultValue="2">
-                <Option value="1">Yes</Option>
-                <Option value="2">No</Option>
+            <Form.Item
+              name={`glass`}
+              label={`Glass`}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Select>
+                <Option value="YES">Yes</Option>
+                <Option value="NO">No</Option>
               </Select>
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name={`Width`} label={`Width`}>
+            <Form.Item
+              name={`width`}
+              label={`Width`}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
               <Input placeholder="" />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name={`Height`} label={`Height`}>
+            <Form.Item
+              name={`height`}
+              label={`Height`}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
               <Input placeholder="" />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item name={`Quantity`} label={`Quantity`}>
+            <Form.Item
+              name={`quantity`}
+              label={`Quantity`}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
               <Input placeholder="" />
             </Form.Item>
           </Col>
@@ -177,25 +261,25 @@ export default () => {
               Add
             </Button>
             {/* <Button
-                            style={{
-                                margin: '0 8px',
-                            }}
-                            onClick={() => {
-                                form.resetFields();
-                            }}
-                        >
-                            Clear
-                        </Button> */}
+              style={{
+                margin: "0 8px",
+              }}
+              onClick={() => {
+                form.resetFields();
+              }}
+            >
+              Clear
+            </Button> */}
             {/* <a
-                            style={{
-                                fontSize: 12,
-                            }}
-                            onClick={() => {
-                                setExpand(!expand);
-                            }}
-                        >
-                            {expand ? <UpOutlined /> : <DownOutlined />} Collapse
-                        </a> */}
+              style={{
+                fontSize: 12,
+              }}
+              onClick={() => {
+                setExpand(!expand);
+              }}
+            >
+              {expand ? <UpOutlined /> : <DownOutlined />} Collapse
+            </a> */}
           </Col>
         </Row>
       </Form>
