@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Tag, Space, Button } from 'antd';
+import Modal from './Modal';
 
 const columns = [
     {
@@ -55,10 +56,26 @@ const data = [
 
 
 export default () => {
-    const [openModal, setOpenModal] = useState(false)
+    const [openModal, setOpenModal] = useState(false);
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+    
     return (
         <>
-            <Button>Modal</Button>
+            <Button onClick={showModal}>Modal</Button>
+            <Modal visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} />
             <Table columns={columns} dataSource={data} />
         </>
     )
