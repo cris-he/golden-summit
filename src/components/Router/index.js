@@ -5,6 +5,7 @@ import Drawer from '../Drawer'
 import Pantry from '../Pantry'
 import Cabinet from '../Cabinet'
 import Option from '../Option'
+import ProgramPath from '../ProgramPath'
 
 export default function (props) {
     return (
@@ -13,6 +14,7 @@ export default function (props) {
             <Route path="/pantry" element={<Pantry />} />
             <Route path="/cabinet" element={<Cabinet />} />
             <Route path="/option" element={<Option />} />
+            <Route path="/program-path" element={<ProgramPath />} />
         </Routes>
     );
 }
