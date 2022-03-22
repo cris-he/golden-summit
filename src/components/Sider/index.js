@@ -27,12 +27,7 @@ const Sider = (props) => {
         defaultSelectedKeys={["1"]}
         defaultOpenKeys={["products"]}
       >
-        <Menu.SubMenu
-          collapsed={false}
-          key="products"
-          icon={<UserOutlined />}
-          title="Products"
-        >
+        <Menu.SubMenu key="products" icon={<UserOutlined />} title="Products">
           <Menu.Item key="1" icon={<UserOutlined />}>
             <Link to="/cabinet">Cabinet</Link>
           </Menu.Item>
