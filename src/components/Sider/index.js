@@ -32,6 +32,9 @@ const Sider = (props) => {
                 <Menu.Item key="3" icon={<UploadOutlined />}>
                     <Link to="/pantry">Pantry</Link>
                 </Menu.Item>
+                <Menu.Item key="4" icon={<UploadOutlined />}>
+                    <Link to="/option">Option</Link>
+                </Menu.Item>
             </Menu>
         </Layout.Sider>
     );
