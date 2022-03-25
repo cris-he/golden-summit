@@ -4,6 +4,7 @@ import "./index.css";
 
 import { Layout, Menu } from "antd";
 import {
+  HomeOutlined,
   UserOutlined,
   VideoCameraOutlined,
   UploadOutlined,
@@ -24,9 +25,12 @@ const Sider = (props) => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={["1"]}
+        defaultSelectedKeys={["0"]}
         defaultOpenKeys={["products"]}
       >
+        <Menu.Item key="0" icon={<HomeOutlined />}>
+          <Link to="/home">Home</Link>
+        </Menu.Item>
         <Menu.SubMenu key="products" icon={<UserOutlined />} title="Products">
           <Menu.Item key="1" icon={<UserOutlined />}>
             <Link to="/cabinet">Cabinet</Link>

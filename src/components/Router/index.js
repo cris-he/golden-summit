@@ -6,10 +6,12 @@ import Pantry from '../Pantry'
 import Cabinet from '../Cabinet'
 import Option from '../Option'
 import ProgramPath from '../ProgramPath'
+import Home from '../Home'
 
 export default function (props) {
     return (
         <Routes>
+            <Route path="/home" element={<Home />} />
             <Route path="/drawer" element={<Drawer />} />
             <Route path="/pantry" element={<Pantry />} />
             <Route path="/cabinet" element={<Cabinet />} />
