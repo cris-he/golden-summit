@@ -1,19 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Tag, Space } from "antd";
 
 const columns = [
   {
     title: "Program Path",
-    dataIndex: "programPath",
-    key: "programPath",
+    dataIndex: "path",
+    key: "path",
   },
   {
     title: "Options",
-    key: "options",
-    dataIndex: "options",
+    key: "key",
+    dataIndex: "key",
     render: (tags) => (
       <>
-        {tags.map((tag) => {
+        {tags.split("-").map((tag) => {
           return (
             <Tag color="geekblue" key={tag}>
               {tag.toUpperCase()}
@@ -35,24 +35,35 @@ const columns = [
   },
 ];
 
-const data = [
-  {
-    key: "1",
-    programPath: "D:\\\\good1.bp",
-    options: ["PVC", "GlASS"],
-  },
-  {
-    key: "2",
-    programPath: "D:\\\\good2.bpp",
-    options: ["PVC", "SHAKER"],
-  },
-  {
-    key: "3",
-    programPath: "D:\\\\good3.bpp",
-    options: ["PVC", "1/8 DOOR"],
-  },
-];
-
 export default () => {
-  return <Table columns={columns} dataSource={data} />;
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    fetch('https://gs-app-config-service.herokuapp.com/api/programPaths')
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setItems(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }, [])
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  } else if (!isLoaded) {
+    return <div>Loading...</div>;
+  } else {
+    return(
+      <div>
+        <Table columns={columns} dataSource={items} />
+      </div>
+    )
+  }
 };
