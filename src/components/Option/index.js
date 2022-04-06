@@ -58,23 +58,26 @@ export default () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
   const fetchData = async () =>{
-    await fetch('https://gs-app-config-service.herokuapp.com/api/options')
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setItems(result);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
+    setIsLoaded(false);  
+    try{
+        const response = await fetch('https://gs-app-config-service.herokuapp.com/api/options');
+        const resData = await response.json();
+        // await new Promise((resolve, reject)=> {
+        //   setTimeout(()=> {
+        //     console.log('timer end');
+        //     resolve();
+        //   }, 5000)
+        // })
+        setItems(resData);
+      }catch(error){
+        setError(error);
+      }
+      setIsLoaded(true);
   }
 
-  useEffect(() => {
-    fetchData();
-  }, [])
+  useEffect(async () => {
+    await fetchData();
+  },[])
 
   if(error){
     return <div>Error: {error.message}</div>;
@@ -86,7 +89,7 @@ export default () => {
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <Button onClick={showModal}>Add</Button>
         </div>
-        <Modal visible={isModalVisible} onCancel={handleCancel} onOk={()=> {setIsModalVisible(false); fetchData();}} />
+        <Modal visible={isModalVisible} onCancel={handleCancel} onOk={async ()=> {setIsModalVisible(false); await fetchData();}} />
         <Table columns={columns} dataSource={items} />
       </>
     );

@@ -8,7 +8,7 @@ const OPTIONS = ['SHAKER', '1/8 Door', 'MANHAT SHAKER', 'GS V', 'P 100', '0.125'
 export default (props) => {
 
     const [selectedItems, setSelectedItems] = useState([])
-
+    const [error, setError] = useState(null);
 
     const [form] = Form.useForm();
 
@@ -17,28 +17,35 @@ export default (props) => {
         setSelectedItems(selectedItems);
     }
 
-    const postForm = (e) => {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: e.name, options: e.options })
-        };
-        fetch('https://gs-app-config-service.herokuapp.com/api/options', requestOptions)
-            .then(response => response.json())
-            .then(()=> {props.onOk()});
+    const postForm = async (e) => {
+        try{
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: e.name, options: e.options })
+            };    
+            await fetch('https://gs-app-config-service.herokuapp.com/api/options', requestOptions);
+            props.onOk();
+        }catch(error){
+            setError(error);
+        }
+    }
+
+    const submitForm = async () => {
+        try{
+            const values = await form.validateFields();
+            await postForm(values);
+        }catch(error){
+            setError(error);
+        }
     }
 
     const filteredOptions = OPTIONS.filter(o => !selectedItems.includes(o));
 
     return (
         <>
-            <Modal title="Basic Modal" visible={props.visible} onCancel={props.onCancel} onOk={() => {
-                form.validateFields()
-                    .then((values) => {
-                        postForm(values);
-                    }).catch((info) => {
-                        console.log("validate failed: ", info);
-                    });
+            <Modal title="Basic Modal" visible={props.visible} onCancel={props.onCancel} onOk={async () => {
+                await submitForm();
             }} >
                 <Form form={form} name="add-options">
                     <Form.Item
