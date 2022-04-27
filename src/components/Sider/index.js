@@ -19,8 +19,8 @@ const Sider = (props) => {
   const [menuItems, setItems] = useState([]);
 
   useEffect(() => {
-    fetch('https://gs-app-config-service.herokuapp.com/api/products')
-      .then(res => res.json())
+    fetch("https://gs-app-config-service.herokuapp.com/api/products")
+      .then((res) => res.json())
       .then(
         (result) => {
           setIsLoaded(true);
@@ -30,13 +30,13 @@ const Sider = (props) => {
           setIsLoaded(true);
           setError(error);
         }
-      )
-  }, [])
+      );
+  }, []);
 
   if (error) {
-    return <div>Error: {error.message}</div>
+    return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   } else {
     return (
       <Layout.Sider
@@ -56,14 +56,14 @@ const Sider = (props) => {
             <Link to="/home">Home</Link>
           </Menu.Item>
           <Menu.SubMenu key="products" icon={<UserOutlined />} title="Products">
-            {menuItems.map(item => (
+            {menuItems.map((item) => (
               <Menu.Item key={item._id} value={item.name}>
                 <Link to={item.name}>{item.name}</Link>
               </Menu.Item>
             ))}
             <Menu.Item key="3" icon={<PlusOutlined />}>
-            <Link to="/add">Add</Link>
-          </Menu.Item>
+              <Link to="/add">Add</Link>
+            </Menu.Item>
           </Menu.SubMenu>
           <Menu.Item key="4" icon={<UploadOutlined />}>
             <Link to="/option">Option</Link>
