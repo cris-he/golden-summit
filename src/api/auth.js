@@ -1,5 +1,5 @@
 export function signIn(user) {
-  return fetch(`https://gs-app-order-service.herokuapp.com/api/${user.id}`)
+  return fetch(`https://gs-app-order-service.herokuapp.com/api/users/${user.id}`)
     .then((res) => res.json())
     .then((data) => {
       console.log("auth-api: signIn", data);

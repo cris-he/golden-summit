@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import "./index.css";
 
+/* redux */
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as authAction from "../../redux/actions/auth";
+
+/* ant design */
 import { Layout, Menu } from "antd";
 import {
   HomeOutlined,
@@ -52,6 +58,11 @@ const Sider = (props) => {
           defaultSelectedKeys={["0"]}
           defaultOpenKeys={["products"]}
         >
+          <Menu.Item key="demo" icon={<HomeOutlined />}>
+            {typeof props.user.displayName === "undefined"
+              ? "Welcome"
+              : `Hello, ${props.user.displayName}`}
+          </Menu.Item>
           <Menu.Item key="0" icon={<HomeOutlined />}>
             <Link to="/home">Home</Link>
           </Menu.Item>
@@ -77,4 +88,17 @@ const Sider = (props) => {
   }
 };
 
-export default Sider;
+function mapStateToProps(state, ownProps) {
+  console.log("mapStateToProps: Auth", state, ownProps);
+  return {
+    user: state.user,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    authAction: bindActionCreators(authAction, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sider);

@@ -8,7 +8,7 @@ function* signInWithCreds(creds) {
     console.log("auth-saga: signInWithCreds- API", creds.data);
     const user = yield call(authApi.signIn, creds.data);
     console.log("auth-saga: signInWithCreds - RES", user);
-    yield call(setAuthToken, user.id);
+    // yield call(setAuthToken, user.id);
     /* dispatch action */
     console.log("auth-saga: signInWithCreds - DISPATCH", user);
     yield put(authAction.signInSuccess(user));
@@ -22,7 +22,7 @@ function* signOut() {
     console.log("auth-saga: signOut");
     const res = yield call(authApi.signOut);
     console.log("auth-saga: signOut - RES", res);
-    yield call(removeAuthToken);
+    // yield call(removeAuthToken);
     /* dispatch action */
     console.log("auth-saga: signOut - DISPATCH", res);
     yield put(authAction.signOutSuccess(res));
