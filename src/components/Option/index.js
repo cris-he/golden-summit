@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Table, Tag, Space, Button } from "antd";
 import Modal from "./Modal";
+import { getOption } from "../../api/config";
+import { deleteOption } from "../../api/config";
 
 export default () => {
   const columns = [
@@ -59,8 +61,8 @@ export default () => {
   const fetchData = async () =>{
     setIsLoaded(false);  
     try{
-        const response = await fetch('https://gs-app-config-service.herokuapp.com/api/options');
-        const resData = await response.json();
+        const response = await getOption();
+        //const resData = await response.json();
         //console.log("resData",resData);
         // await new Promise((resolve, reject)=> {
         //   setTimeout(()=> {
@@ -68,7 +70,7 @@ export default () => {
         //     resolve();
         //   }, 5000)
         // })
-        setItems(resData);
+        setItems(response);
       }catch(error){
         setError(error);
       }
@@ -77,7 +79,8 @@ export default () => {
 
   const deleteRecord = async (record) => {
     try{
-      await fetch("https://gs-app-config-service.herokuapp.com/api/options/"+record._id, {method: 'DELETE'});
+      //await fetch("https://gs-app-config-service.herokuapp.com/api/options/"+record._id, {method: 'DELETE'});
+      await deleteOption(record._id);
       setItems(items.filter(item => item._id !== record._id))
     }catch(error){
       setError(error);

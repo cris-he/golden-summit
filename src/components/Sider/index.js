@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import "./index.css";
-
+import { getProduct } from "../../api/config";
 import { Layout, Menu } from "antd";
 import {
   HomeOutlined,
@@ -18,20 +18,19 @@ const Sider = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [menuItems, setItems] = useState([]);
 
-  useEffect(() => {
-    fetch('https://gs-app-config-service.herokuapp.com/api/products')
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setItems(result);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
-  }, [])
+useEffect( async () => {
+    try {
+     const result = await getProduct();
+     setIsLoaded(true);
+     setItems(result);
+    } catch (error) {
+     //(error) => {
+       setIsLoaded(true);
+       setError(error);
+    //}
+   }
+ 
+   }, [])
 
   if (error) {
     return <div>Error: {error.message}</div>
