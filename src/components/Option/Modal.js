@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Form, Input, Select } from 'antd';
-
+import { addOption } from '../../api/config';
 
 const OPTIONS = ['SHAKER', '1/8 Door', 'MANHAT SHAKER', 'GS V', 'P 100', '0.125'];
 
@@ -24,7 +24,8 @@ export default (props) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: e.name, options: e.options })
             };    
-            await fetch('https://gs-app-config-service.herokuapp.com/api/options', requestOptions);
+            //await fetch(`${API_ENDPOINT}`+"/options", requestOptions);
+            await addOption(requestOptions);
             props.onOk();
         }catch(error){
             setError(error);

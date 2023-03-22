@@ -1,45 +1,46 @@
 import React, { useState, useEffect } from "react";
 import { Table, Tag, Space, Button } from "antd";
 import Modal from "./Modal";
-
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-   },
-  {
-    title: "Options",
-    key: "options",
-    dataIndex: "options",
-    render: (tags) => (
-      <>
-        {tags?.map((tag) => {
-          return (
-            <Tag color={"geekblue"} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (text, record) => (
-      <Space size="middle">
-        <a>Edit</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-
+import { getOption } from "../../api/config";
+import { deleteOption } from "../../api/config";
 
 export default () => {
-  const [openModal, setOpenModal] = useState(false);
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+     },
+    {
+      title: "Options",
+      key: "options",
+      dataIndex: "options",
+      render: (tags) => (
+        <>
+          {tags?.map((tag) => {
+            return (
+              <Tag color={"geekblue"} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (text, record) => (
+        <Space size="middle">
+          <a onClick={showModal}>Edit</a>
+          <a onClick={async (e) => {await deleteRecord(record);}}>Delete</a>
+        </Space>
+      ),
+    },
+  ];
 
+
+  const [openModal, setOpenModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
@@ -60,19 +61,30 @@ export default () => {
   const fetchData = async () =>{
     setIsLoaded(false);  
     try{
-        const response = await fetch('https://gs-app-config-service.herokuapp.com/api/options');
-        const resData = await response.json();
+        const response = await getOption();
+        //const resData = await response.json();
+        //console.log("resData",resData);
         // await new Promise((resolve, reject)=> {
         //   setTimeout(()=> {
         //     console.log('timer end');
         //     resolve();
         //   }, 5000)
         // })
-        setItems(resData);
+        setItems(response);
       }catch(error){
         setError(error);
       }
       setIsLoaded(true);
+  }
+
+  const deleteRecord = async (record) => {
+    try{
+      //await fetch("https://gs-app-config-service.herokuapp.com/api/options/"+record._id, {method: 'DELETE'});
+      await deleteOption(record._id);
+      setItems(items.filter(item => item._id !== record._id))
+    }catch(error){
+      setError(error);
+    }
   }
 
   useEffect(async () => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Tag, Space } from "antd";
+import { getProgramPath } from "../../api/config";
 
 const columns = [
   {
@@ -40,19 +41,30 @@ export default () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    fetch('https://gs-app-config-service.herokuapp.com/api/programPaths')
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setItems(result);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
+  // useEffect(() => {
+  //   fetch('https://gs-app-config-service.herokuapp.com/api/programPaths')
+  //     .then(res => res.json())
+  //     .then(
+  //       (result) => {
+  //         setIsLoaded(true);
+  //         setItems(result);
+  //       },
+  //       (error) => {
+  //         setIsLoaded(true);
+  //         setError(error);
+  //       }
+  //     )
+  // }, [])
+
+  useEffect(async() => {
+    try{
+      const result  = await getProgramPath();
+      setIsLoaded(true);
+      setItems(result);
+    }catch(error){
+      setIsLoaded(true);
+      setError(error);
+    }
   }, [])
 
   if (error) {
