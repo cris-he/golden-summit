@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 
 import "./index.css";
 import { getProduct } from "../../api/config";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as authAction from "../../redux/actions/auth";
 import { Layout, Menu } from "antd";
 import {
   HomeOutlined,
@@ -18,6 +21,7 @@ const Sider = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [menuItems, setItems] = useState([]);
 
+
 useEffect( async () => {
     try {
      const result = await getProduct();
@@ -33,9 +37,9 @@ useEffect( async () => {
    }, [])
 
   if (error) {
-    return <div>Error: {error.message}</div>
+    return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   } else {
     return (
       <Layout.Sider
@@ -51,18 +55,23 @@ useEffect( async () => {
           defaultSelectedKeys={["0"]}
           defaultOpenKeys={["products"]}
         >
+          <Menu.Item key="demo" icon={<HomeOutlined />}>
+            {typeof props.user.displayName === "undefined"
+              ? "Welcome"
+              : `Hello, ${props.user.displayName}`}
+          </Menu.Item>
           <Menu.Item key="0" icon={<HomeOutlined />}>
             <Link to="/home">Home</Link>
           </Menu.Item>
           <Menu.SubMenu key="products" icon={<UserOutlined />} title="Products">
-            {menuItems.map(item => (
+            {menuItems.map((item) => (
               <Menu.Item key={item._id} value={item.name}>
                 <Link to={item.name}>{item.name}</Link>
               </Menu.Item>
             ))}
             <Menu.Item key="3" icon={<PlusOutlined />}>
-            <Link to="/add">Add</Link>
-          </Menu.Item>
+              <Link to="/add">Add</Link>
+            </Menu.Item>
           </Menu.SubMenu>
           <Menu.Item key="4" icon={<UploadOutlined />}>
             <Link to="/option">Option</Link>
@@ -76,4 +85,17 @@ useEffect( async () => {
   }
 };
 
-export default Sider;
+function mapStateToProps(state, ownProps) {
+  console.log("mapStateToProps: Auth", state, ownProps);
+  return {
+    user: state.user,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    authAction: bindActionCreators(authAction, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sider);
